@@ -218,7 +218,7 @@ onehot_names = list(onehot.get_feature_names_out(categorical_cols))
 TRAIN_COL_ORDER = numerical_cols + onehot_names + ordinal_cols
 
 LABEL_MAP = {0: "Healthy Person", 1: "Diseased Person"}
-FIXED_THRESHOLD = 0.23  
+FIXED_THRESHOLD = 0.47 
 
 # Session 
 if "step" not in st.session_state: st.session_state.step = 1
