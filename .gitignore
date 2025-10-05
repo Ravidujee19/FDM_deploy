@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+
+# Environments
+.venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project artifacts to ignore
+# Ignore generated plots/reports
+
+
+
+# But keep placeholder files so dirs stay in repo
+!reports/**/.gitkeep
+!data/**/.gitkeep
