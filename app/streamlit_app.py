@@ -354,7 +354,7 @@ else:
 
     try:
         X = build_features_df(raw_df)
-        pred, prob = predict_threshold_0_5(X)
+        pred, _ = predict_threshold_0_5(X)  # ignore probability
 
         label = LABEL_MAP.get(pred, "Unknown")
         badge_class = "result-ok" if pred == 0 else "result-bad"
@@ -364,9 +364,10 @@ else:
             <div class="result-badge {badge_class}">{icon} {label}</div>
         """, unsafe_allow_html=True)
 
-        if prob is not None:
-            p = min(max(prob, 0.0), 1.0)
-            st.progress(p, text=f"Estimated probability of disease: {p:.3f}")
+        # Removed probability display
+        # if prob is not None:
+        #     p = min(max(prob, 0.0), 1.0)
+        #     st.progress(p, text=f"Estimated probability of disease: {p:.3f}")
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
