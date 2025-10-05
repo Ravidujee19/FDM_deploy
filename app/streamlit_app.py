@@ -5,9 +5,8 @@ import pandas as pd
 import numpy as np
 import joblib
 
-ROOT = Path(__file__).resolve().parents[1]  
-MODEL_PATH = ROOT / "models" / "best_model.pkl"
-PREP_PATH  = ROOT / "models" / "preprocessing.joblib"
+MODEL_PATH = Path("models/best_model.pkl")
+PREP_PATH  = Path("models/preprocessing.joblib")
 
 st.set_page_config(page_title="Disease Risk – Predictor", page_icon="🩺", layout="centered")
 
@@ -199,8 +198,13 @@ if missing:
     st.error("Required file(s) not found:\n- " + "\n- ".join(missing))
     st.stop()
 
-model = joblib.load(MODEL_PATH)
-prep  = joblib.load(PREP_PATH)
+@st.cache_resource
+def load_model_and_prep(model_path, prep_path):
+    model = joblib.load(model_path)
+    prep  = joblib.load(prep_path)
+    return model, prep
+  
+model, prep = load_model_and_prep(MODEL_PATH, PREP_PATH)
 
 onehot  = prep["onehot"]
 ordinal = prep["ordinal"]
@@ -214,7 +218,7 @@ onehot_names = list(onehot.get_feature_names_out(categorical_cols))
 TRAIN_COL_ORDER = numerical_cols + onehot_names + ordinal_cols
 
 LABEL_MAP = {0: "Healthy Person", 1: "Diseased Person"}
-FIXED_THRESHOLD = 0.5  
+FIXED_THRESHOLD = 0.23  
 
 # Session 
 if "step" not in st.session_state: st.session_state.step = 1
@@ -343,7 +347,6 @@ elif st.session_state.step == 2:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-
 # Step 3
 else:
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -363,11 +366,6 @@ else:
         st.markdown(f"""
             <div class="result-badge {badge_class}">{icon} {label}</div>
         """, unsafe_allow_html=True)
-
-        # Removed probability display
-        # if prob is not None:
-        #     p = min(max(prob, 0.0), 1.0)
-        #     st.progress(p, text=f"Estimated probability of disease: {p:.3f}")
 
     except Exception as e:
         st.error(f"Prediction failed: {e}")
